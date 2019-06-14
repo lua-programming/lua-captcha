@@ -76,6 +76,7 @@ extern "C" {
                 rand()%y+y_image/2, // y	The y-coordinate of the basepoint (roughly the lower left corner) of the first letter.
                 letter // string	The string to render.
             );
+            if (error) luaL_argerror (L, 0, error); // show error
             x+=usr_fntsize; // sum x + font size, creates and space between each letter
         }
         for (i=0; i<(y_image*x_image)/2; i++) {
