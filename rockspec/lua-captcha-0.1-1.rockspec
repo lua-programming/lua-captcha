@@ -5,8 +5,8 @@ source = {
     branch="master"
 }
 description = {
-	summary = 'xxxxx',
-	detailed = "xxxxx",
+	summary = 'Lua-Captcha v0.1-1 by Otgo',
+	detailed = 'Create captcha images.',
 	homepage = 'https://github.com/lua-programming/lua-captcha',
 	license = 'MIT/X11'
 }
@@ -17,11 +17,9 @@ build = {
 	type = 'builtin',
     modules = {
         captcha = {
-            sources = {
-                "captcha.c"
-            },
-            libraries = {"gd"}
+            sources = {'src/captcha.c'},
+            libraries = {'gd','m'}
         }
-
-    }
+    },
+    copy_directories = {'examples','fonts'}
 }
