@@ -1,5 +1,5 @@
 Compile:
-	make all
+	make install
 	
 Require:
 	libpng
