@@ -3,6 +3,6 @@ LUA_VERSION:=5.2
 CFLAGS:=-lgd -fpic -shared -llua$(LUA_VERSION) -I/usr/include/lua$(LUA_VERSION) -Wall
 BUILD:=*.c
 OBJ:=captcha.so
-all:
+install:
 	@$(CC) $(BUILD) -o $(OBJ) $(CFLAGS)
 	$(info ************  build success ************)
