@@ -1,1 +1,6 @@
-make all
+Compile:
+	make all
+	
+Require:
+	libpng
+	libgd
