@@ -1,3 +1,4 @@
+#!/usr/bin/env lua
 local captchas = require 'captcha'
 print("Version", captchas.VERSION)
 local captcha = captchas.new()
