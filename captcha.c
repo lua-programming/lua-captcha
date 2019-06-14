@@ -63,8 +63,8 @@ static int generate(lua_State* L) {
     int random_color = gdImageColorAllocate(im, rand()%200, rand()%200, rand()%200); // generate a random color, used by text
     for (i = 0; i<=usr_length; i++) {
         char rdm_letter = troc(t_w[rand()%48]);
-        sprintf(path, "%s%c", path, rdm_letter);
-        sprintf(letter, "%c", rdm_letter);
+        sprintf(path, "%s%c", path, rdm_letter); // add char on path, to get final filename
+        sprintf(letter, "%c", rdm_letter); // converts char to char *, gd needs it
         char *error = gdImageStringTTF(
             im, // im	The image to draw onto.
             NULL, //brect	The bounding rectangle as array of 8 integers where each pair represents the x- and y-coordinate of a point.  The points specify the lower left, lower right, upper right and upper left corner.
@@ -76,7 +76,7 @@ static int generate(lua_State* L) {
             rand()%y+y_image/2, // y	The y-coordinate of the basepoint (roughly the lower left corner) of the first letter.
             letter // string	The string to render.
         );
-        x+=usr_fntsize;
+        x+=usr_fntsize; // sum x + font size, creates and space between each letter
     }
     for (i=0; i<(y_image*x_image)/2; i++) {
         int random_x = rand()%x_image;
@@ -93,32 +93,32 @@ static int generate(lua_State* L) {
 }
 static int setlength(lua_State* L) {
     lua_Number xsize = luaL_checknumber(L, 2);
-    lua_pushnumber(L, xsize);
-	lua_setfield(L, -3, "__length"); // works by gettings mettatable (-3)
-    luaL_getmetatable(L, "CAPTCHA");
+    lua_pushnumber(L, xsize); // push length into table
+	lua_setfield(L, -3, "__length"); // works by gettings metatable (-3)
+    luaL_getmetatable(L, "CAPTCHA"); // get captcha table
     lua_setmetatable(L, -2);
     return 1;
 }
 static int setfontsize(lua_State* L) {
     lua_Number xsize = luaL_checknumber(L, 2);
-    lua_pushnumber(L, xsize);
-	lua_setfield(L, -3, "__fntsize"); // works by gettings mettatable (-3)
+    lua_pushnumber(L, xsize); // push fontsize into table
+	lua_setfield(L, -3, "__fntsize"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA");
     lua_setmetatable(L, -2);
     return 1;
 }
 static int setpath(lua_State* L) {
     const char *path = luaL_checkstring(L, 2);
-    lua_pushstring(L, path);
-	lua_setfield(L, -3, "__path"); // works by gettings mettatable (-3)
+    lua_pushstring(L, path); // push path into table
+	lua_setfield(L, -3, "__path"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA");
     lua_setmetatable(L, -2);
     return 1;
 }
 static int setformat(lua_State* L) {
     const char *format = luaL_checkstring(L, 2);
-    lua_pushstring(L, format);
-	lua_setfield(L, -3, "__format"); // works by gettings mettatable (-3)
+    lua_pushstring(L, format); // push format into table
+	lua_setfield(L, -3, "__format"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA");
     lua_setmetatable(L, -2);
     return 1;
@@ -135,23 +135,21 @@ static int L_new(lua_State *L) {
     luaL_newmetatable(L, "CAPTCHA");
     lua_setmetatable(L, -1);
     luaL_newlibtable(L, L_methods); // adds struct (those are the commands), only creates the table
-    luaL_setfuncs(L, L_methods, 0);
+    luaL_setfuncs(L, L_methods, 0);  // register methods struct
     lua_pushvalue(L, -1); // push the metatable
-    lua_setfield(L, -1,"__index");
-    lua_pushstring(L, "1.9");
-	lua_setfield(L, -2, "VERSION");
-    //printf("%i\n", LUA_VERSION_NUM );
+    lua_setfield(L, -1,"__index"); // adds metatable to index
+    //printf("%i\n", LUA_VERSION_NUM ); // testing, lua version
     return 1;
 }
 int luaopen_captcha(lua_State* L) {
     static const struct luaL_Reg L_register[] = {
-        {"new", &L_new},
+        {"new", &L_new}, // creates a new beginning to make a captcha, adding methods and mt table
         {NULL, NULL}
     };
-    luaL_newlib(L, L_register);
-    luaL_setfuncs(L, L_register, 0);
-    lua_pushstring(L, "1.9");
-	lua_setfield(L, -2, "VERSION");
+    luaL_newlib(L, L_register); // adds L_register struct
+    luaL_setfuncs(L, L_register, 0); // register L_register struct
+    lua_pushstring(L, LUA_CAPTCHA_VERSION); // add version value
+	lua_setfield(L, -2, "VERSION"); // add to version variable
     return 1;
 }
 #ifdef __cplusplus
