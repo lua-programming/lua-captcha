@@ -1,4 +1,4 @@
-package = 'captcha'
+package = 'lua-captcha'
 version = '0.1-1'
 source = {
     url = "git://github.com/lua-programming/lua-captcha.git",
