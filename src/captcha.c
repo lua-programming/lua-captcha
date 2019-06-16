@@ -101,7 +101,7 @@ static int setlength(lua_State* L) {
     lua_pushnumber(L, xsize); // push length into table
     lua_setfield(L, -3, "__length"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA"); // gets metatable
-    luaL_setmetatable(L, "CAPTCHA"); // and save
+    lua_setmetatable(L, -1); // and save
     return 1;
 }
 static int setfontsize(lua_State* L) {
@@ -109,7 +109,7 @@ static int setfontsize(lua_State* L) {
     lua_pushnumber(L, xsize); // push fontsize into table
     lua_setfield(L, -3, "__fntsize"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA"); // gets metatable
-    luaL_setmetatable(L, "CAPTCHA"); // and save
+    lua_setmetatable(L, -1); // and save
     return 1;
 }
 static int setpath(lua_State* L) {
@@ -117,7 +117,7 @@ static int setpath(lua_State* L) {
     lua_pushstring(L, path); // push path into table
     lua_setfield(L, -3, "__path"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA"); // gets metatable
-    luaL_setmetatable(L, "CAPTCHA"); // and save
+    lua_setmetatable(L, -1); // and save
     return 1;
 }
 static int setformat(lua_State* L) {
@@ -125,7 +125,7 @@ static int setformat(lua_State* L) {
     lua_pushstring(L, format); // push format into table
     lua_setfield(L, -3, "__format"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA"); // gets metatable
-    luaL_setmetatable(L, "CAPTCHA"); // and save
+    lua_setmetatable(L, -1); // and save
     return 1;
 }
 static int setfontsfolder(lua_State* L) {
@@ -133,7 +133,7 @@ static int setfontsfolder(lua_State* L) {
     lua_pushstring(L, ffolder); // push format into table
     lua_setfield(L, -3, "__ffolder"); // works by gettings metatable (-3)
     luaL_getmetatable(L, "CAPTCHA"); // gets metatable
-    luaL_setmetatable(L, "CAPTCHA"); // and save
+    lua_setmetatable(L, -1); // and save
     return 1;
 }
 static int L_new(lua_State *L) {
@@ -147,12 +147,15 @@ static int L_new(lua_State *L) {
         {NULL, NULL}
     };
     luaL_newmetatable(L, "CAPTCHA");
-    luaL_setmetatable(L, "CAPTCHA");
+    lua_setmetatable(L, -1);
+    #if LUA_VERSION_NUM == 501
+    luaL_openlib( L, "m_captcha", L_methods, 0 );
+    #else
     luaL_newlibtable(L, L_methods); // adds struct (those are the commands), only creates the table
     luaL_setfuncs(L, L_methods, 0);  // register methods struct
+    #endif
     lua_pushvalue(L, -1); // push the metatable
     lua_setfield(L, -1,"__index"); // adds metatable to index
-    //printf("%i\n", LUA_VERSION_NUM ); // testing, lua version
     return 1;
 }
 int luaopen_captcha(lua_State* L) {
@@ -160,8 +163,13 @@ int luaopen_captcha(lua_State* L) {
         {"new", &L_new}, // creates a new beginning to make a captcha, adding methods and mt table
         {NULL, NULL}
     };
+    #if LUA_VERSION_NUM == 501
+    luaL_openlib( L, "libcaptcha", L_register, 0 );
+    #else
     luaL_newlib(L, L_register); // adds L_register struct
     luaL_setfuncs(L, L_register, 0); // register L_register struct
+    #endif
+
     lua_pushstring(L, LUA_CAPTCHA_VERSION); // add version value
     lua_setfield(L, -2, "VERSION"); // add to version variable
     return 1;
