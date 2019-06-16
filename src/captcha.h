@@ -1,5 +1,5 @@
 #ifndef CAPTCHA_H
-#define LUA_CAPTCHA_VERSION "v0.1-1"
+#define LUA_CAPTCHA_VERSION "v0.1-2"
 #define CAPTCHA_H
 int t_w[49] = {
 	101, 141, 102, 142, 103, 143, 104, 144, 105, 145,
