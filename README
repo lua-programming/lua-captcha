@@ -1,3 +1,6 @@
+Rock install:
+	luarocks install lua-captcha
+
 Compile:
 	make install
 	
