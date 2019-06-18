@@ -1,0 +1,6 @@
+# ignores compiled files
+*.so
+# ignores debug files
+*.test
+# ignores LuaRocks packs
+*.src.rock

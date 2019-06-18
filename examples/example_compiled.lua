@@ -1,5 +1,6 @@
 #!/usr/bin/env lua
-local captchas = require 'captcha' -- uses LuaRocks module
+package.cpath = "../?.so" -- set path for C modules
+local captchas = require 'captcha' -- uses compiled modules by make
 print("Version", captchas.VERSION) -- get version
 local captcha = captchas.new() -- create a new metatable, to create a new captcha
 captcha:setlength(5)

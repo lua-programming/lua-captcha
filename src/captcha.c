@@ -31,7 +31,7 @@ static int generate(lua_State* L) {
     lua_pop(L, 1); // pop tab, continue code
     DIR *dr = opendir(usr_ffonts);
     if (dr == NULL) {
-        luaL_argerror (L, 0, "Could not open fonts directory");
+        luaL_argerror (L, 0, "Cannot open fonts directory");
         return 0;
     }
     char tmp[1024]; // 1024, fonts name, n folder
@@ -50,7 +50,7 @@ static int generate(lua_State* L) {
     if (elements == 0) {
         luaL_argerror (L, 0, "Fonts directory has not fonts");
     }
-    path = (char*)lua_newuserdata(L, strlen(usr_path)+usr_length); // works like malloc, adding dat to gc
+    path = (char*)lua_newuserdata(L, strlen(usr_path)+usr_length+strlen(usr_fmt)+1); // works like malloc, adding dat to gc
     lua_pop(L, 1); // continues
     sprintf(path, "%s/", usr_path);
     FILE *out;
@@ -65,7 +65,7 @@ static int generate(lua_State* L) {
     y = y_image/2; // set first letter in the center
     x = 0; // set first letter at the start (0xY)
     int random_color = gdImageColorAllocate(im, rand()%200, rand()%200, rand()%200); // generate a random color, used by text
-    for (i = 0; i<=usr_length; i++) {
+    for (i=1; i<=usr_length; i++) {
         char rdm_letter = troc(t_w[rand()%48]);
         sprintf(path, "%s%c", path, rdm_letter); // add char on path, to get final filename
         sprintf(letter, "%c", rdm_letter); // converts char to char *, gd needs it

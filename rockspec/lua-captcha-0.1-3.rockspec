@@ -1,11 +1,11 @@
 package = 'lua-captcha'
-version = '0.1-2'
+version = '0.1-3'
 source = {
 	url = 'git://github.com/lua-programming/lua-captcha.git',
-	branch = '0.1-2'
+	branch = 'master'
 }
 description = {
-	summary = 'Lua-Captcha v0.1-2 by Otgo',
+	summary = 'Lua-Captcha v0.1-3 by Otgo',
 	detailed = 'Create captcha images.',
 	homepage = 'https://github.com/lua-programming/lua-captcha',
 	license = 'MIT/X11'
