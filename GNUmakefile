@@ -1,5 +1,4 @@
 CC?=c89
-# you can set your lua version here
 ifeq ($(LUA_VERSION),0)
 	LUA_VERSION=$(shell /usr/bin/env lua -e "print(({_VERSION:gsub('^%S+%s', '')})[1])")
 endif
