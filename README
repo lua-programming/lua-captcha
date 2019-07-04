@@ -1,13 +1,9 @@
-Rock install:
-	luarocks install lua-captcha
+Compiling example:
+	make LUA_VERSION=5.3
 
-Compile:
-	make
-	
-Require:
+Requires:
 	libpng
 	libgd
-	
+
 	debian install:
 		sudo apt-get install libpng-dev libgd-dev
-	

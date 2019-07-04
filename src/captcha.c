@@ -13,6 +13,7 @@ static int generate(lua_State* L) {
     char *fonts[21];
     struct dirent *de;
     const char *usr_path="./", *usr_fmt = "png", *usr_ffonts="./"; // set user path and user format to NULL
+    char *captcha;
     char *path;
     int usr_fntsize = 60, usr_length = 5; // set sizes to 0 (false)
     luaL_checktype(L, 1, LUA_TTABLE); // check if arg1 is a table
@@ -52,6 +53,8 @@ static int generate(lua_State* L) {
     }
     path = (char*)lua_newuserdata(L, strlen(usr_path)+usr_length+strlen(usr_fmt)+1); // works like malloc, adding dat to gc
     lua_pop(L, 1); // continues
+    captcha = (char*)lua_newuserdata(L, strlen(usr_path)+usr_length+strlen(usr_fmt)+1); // works like malloc, adding dat to gc
+    lua_pop(L, 1); // continues
     sprintf(path, "%s/", usr_path);
     FILE *out;
     int x_image = usr_fntsize*usr_length; // calcule width image, using length * font size
@@ -64,18 +67,19 @@ static int generate(lua_State* L) {
     /* gdImageCreate, will be first allocated */
     y = y_image/2; // set first letter in the center
     x = 0; // set first letter at the start (0xY)
-    int random_color = gdImageColorAllocate(im, rand()%200, rand()%200, rand()%200); // generate a random color, used by text
+    int random_color = gdImageColorAllocate(im, rand()%201, rand()%201, rand()%201); // generate a random color, used by text
     for (i=1; i<=usr_length; i++) {
-        char rdm_letter = troc(t_w[rand()%48]);
-        sprintf(path, "%s%c", path, rdm_letter); // add char on path, to get final filename
-        sprintf(letter, "%c", rdm_letter); // converts char to char *, gd needs it
+        char rdmletter = t_w[rand()%TWSIZE];
+        sprintf(path, "%s%c", path, rdmletter); // add char on path, to get final filename
+        sprintf(letter, "%c", rdmletter); // converts char to char *, gd needs it
+        sprintf(captcha, "%s%c", captcha, rdmletter); // add char to captcha text
         char *error = gdImageStringTTF(
             im, // im	The image to draw onto.
             NULL, //brect	The bounding rectangle as array of 8 integers where each pair represents the x- and y-coordinate of a point.  The points specify the lower left, lower right, upper right and upper left corner.
             random_color, // fg	The font color
             fonts[rand()%elements], // fontlist	The semicolon delimited list of font filenames to look for.
             usr_fntsize, // ptsize	The height of the font in typographical points (pt).
-            rand()%1, // angle	The angle in radian to rotate the font counter-clockwise.
+            0.15f * ((float)rand() / (float)RAND_MAX) - 0.12f, // generates rdm float: angle	The angle in radian to rotate the font counter-clockwise.
             x, // x	The x-coordinate of the basepoint (roughly the lower left corner) of the first letter.
             rand()%y+y_image/2, // y	The y-coordinate of the basepoint (roughly the lower left corner) of the first letter.
             letter // string	The string to render.
@@ -86,7 +90,7 @@ static int generate(lua_State* L) {
     for (i=0; i<(y_image*x_image)/2; i++) {
         int random_x = rand()%x_image;
         int random_y = rand()%y_image;
-        gdImageSetPixel(im, random_x, random_y, random_color-4000); // generate another "random" color subtracting 4000
+        gdImageSetPixel(im, random_x, random_y, gdImageColorAllocate(im, rand()%201, rand()%201, rand()%201)); // generate another random color
     }
     sprintf(path, "%s.%s", path, usr_fmt);
     out = fopen (path, "wb");
@@ -94,7 +98,8 @@ static int generate(lua_State* L) {
     fclose (out);
     gdImageDestroy(im);
     lua_pushstring(L, path);
-    return 1;
+    lua_pushstring(L, captcha);
+    return 2;
 }
 static int setlength(lua_State* L) {
     lua_Number xsize = luaL_checknumber(L, 2);

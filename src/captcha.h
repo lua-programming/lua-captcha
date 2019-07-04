@@ -1,12 +1,22 @@
 #ifndef CAPTCHA_H
-#define LUA_CAPTCHA_VERSION "v0.1-3"
 #define CAPTCHA_H
-int t_w[49] = {
-	101, 141, 102, 142, 103, 143, 104, 144, 105, 145,
-	106, 146, 107, 147, 110, 150, 151, 112, 152, 113,
-	153, 114, 154, 115, 155, 116, 156, 117, 157, 120,
-	160, 121, 161, 122, 162, 124, 164, 125, 165, 126,
-	166, 127, 167, 130, 170, 131, 171, 132, 172
+#define TWSIZE 50
+#define LUA_CAPTCHA_VERSION "v1.0-0"
+char t_w[TWSIZE] = {
+	0x41, 0x42, 0x43, 0x44,
+	0x45, 0x46, 0x47, 0x48,
+	0x4A, 0x4B, 0x4C, 0x4D,
+	0x4E, 0x4F, 0x50, 0x51,
+	0x52, 0x53, 0x54, 0x55,
+	0x56, 0x57, 0x58, 0x59,
+	0x5A,
+	0x61, 0x62, 0x63, 0x64,
+	0x65, 0x66, 0x67, 0x68,
+	0x6A, 0x6B, 0x6C, 0x6D,
+	0x6E, 0x6F, 0x70, 0x71,
+	0x72, 0x73, 0x74, 0x75,
+	0x76, 0x77, 0x78, 0x79,
+	0x7A
 };
 float Pow(float x, int y) {
 	float temp;
@@ -17,11 +27,5 @@ float Pow(float x, int y) {
 		if(y>0) return x*temp*temp;
 		else return (temp*temp)/x;
 	}
-}
-static int troc(int o) {
-	int d = 0, i = 0;
-	do { d += (o % 10) * Pow(8, i); ++i; o /= 10; }
-	while (o != 0);
-	return d;
 }
 #endif

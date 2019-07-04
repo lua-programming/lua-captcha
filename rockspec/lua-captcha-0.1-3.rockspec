@@ -2,7 +2,7 @@ package = 'lua-captcha'
 version = '0.1-3'
 source = {
 	url = 'git://github.com/lua-programming/lua-captcha.git',
-	branch = 'master'
+	branch = '0.1-3'
 }
 description = {
 	summary = 'Lua-Captcha v0.1-3 by Otgo',
